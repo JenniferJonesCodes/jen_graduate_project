@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import FormField from './../Components/Form/FormField';
 
-export default class Boookcase extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>
-          Search Patient
-        </Text>
-      </View>
-    );
-  }
-}
+const Search = () => (
+  <View style={styles.container}>
+    <Text style={styles.title}>
+      Search
+    </Text>
+    <FormField 
+      // secureTextEntry
+      // value="hello"
+      placeholder="Patient Last Name"
+      // placeholderTextColor="gray"
+    />
+    </View>
+  );
 
 const styles = StyleSheet.create({
   container: {
@@ -26,3 +29,5 @@ const styles = StyleSheet.create({
     margin: 10,
   }
 });
+
+export default Search;
