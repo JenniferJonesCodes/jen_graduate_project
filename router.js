@@ -48,9 +48,9 @@ let screen = Dimensions.get('window');
 // };
 
 const TabNavigator = createBottomTabNavigator({
-  Profile,
   Search,
-  Vitals
+  Vitals,
+  Profile
 });
 
 

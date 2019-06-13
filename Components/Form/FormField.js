@@ -7,7 +7,7 @@ export default class FormField extends Component{
     super(props);
     this.state = '';
   }
-  
+   //need to pass what I will be using the input for so I can have a title for each
     render() {
         return (
           <TextInput style={styles.container}
@@ -26,5 +26,6 @@ const styles = StyleSheet.create({
     width: 300,
     borderWidth: 1,
     borderColor: 'gray',
+    margin: 5,
   }
 });
