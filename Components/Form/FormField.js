@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-export default class FormField extends Component{
-  constructor(props) {
-    super(props);
-    this.state = '';
-  }
+const FormField = (props) => {
+  const [value, updateValue] = useState();
+
+  //constructor(props) {
+  //  super(props);
+  //  this.state = '';
+  //}
+
    //need to pass what I will be using the input for so I can have a title for each
-    render() {
         return (
           <TextInput style={styles.container}
-            onChangeText={(text) => this.setState({text})}
-            value={this.state.text}
-            {...this.props}
+            onChangeText={(text) => updateValue({text})}
+            value={value}
+            {...props}
           />
         );
-      }
-    
 }
 
 const styles = StyleSheet.create({
@@ -29,3 +29,5 @@ const styles = StyleSheet.create({
     margin: 5,
   }
 });
+
+export default FormField;
