@@ -6,6 +6,7 @@ import { Icon } from 'react-native-elements';
 import Profile from './Screens/Profile';
 import Search from './Screens/Search';
 import Vitals from './Screens/Vitals';
+import Bluetooth from './Screens/Bluetooth';
 //import Profile from './Screens/Profile';
 
 let screen = Dimensions.get('window');
@@ -50,7 +51,8 @@ let screen = Dimensions.get('window');
 const TabNavigator = createBottomTabNavigator({
   Search,
   Vitals,
-  Profile
+  Profile,
+  Bluetooth
 });
 
 

@@ -5,11 +5,6 @@ import { StyleSheet } from 'react-native';
 const FormField = (props) => {
   const [value, updateValue] = useState();
 
-  //constructor(props) {
-  //  super(props);
-  //  this.state = '';
-  //}
-
    //need to pass what I will be using the input for so I can have a title for each
         return (
           <TextInput style={styles.container}

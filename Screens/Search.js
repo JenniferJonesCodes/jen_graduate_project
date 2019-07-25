@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import FormField from './../Components/Form/FormField';
 import DateTime from '../Components/Form/DateTime';
