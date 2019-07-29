@@ -1,6 +1,24 @@
 import React from 'react';
-import Bluetooth from './Bluetooth';
+import {View, Text, StyleSheet} from 'react-native';
+import BluetoothClassic from '../Components/Bluetooth/BluetoothClassic';
 
-export default function BluetoothScreen(){
-    return <Bluetooth />
-};
+const Bluetooth = () => (
+    <View>
+      <Text style={styles.title}>
+        Bluetooth? yasssssss
+      </Text>
+      <BluetoothClassic/>
+    </View>
+  );
+  
+  const styles = StyleSheet.create({
+      title: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
+        marginTop: 100,
+      }
+    });
+    
+    export default Bluetooth;
+    
