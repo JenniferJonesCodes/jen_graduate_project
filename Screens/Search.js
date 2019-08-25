@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import FormField from './../Components/Form/FormField';
-import DateTime from '../Components/Form/DateTime';
 
 const Search = () => (
   <View style={styles.conatiner}>
@@ -13,9 +12,6 @@ const Search = () => (
     />
     <FormField 
       placeholder="Patient First Name"
-    />
-    <DateTime 
-      mode="date"
     />
     <Button
       title="Search"

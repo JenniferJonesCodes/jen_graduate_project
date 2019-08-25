@@ -5,7 +5,7 @@ import BluetoothClassic from '../Components/Bluetooth/BluetoothClassic';
 const Bluetooth = () => (
     <View>
       <Text style={styles.title}>
-        Bluetooth? yasssssss
+        Bluetooth Devices
       </Text>
       <BluetoothClassic/>
     </View>

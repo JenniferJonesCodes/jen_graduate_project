@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 const FormField = (props) => {
   const [value, updateValue] = useState();
 
-   //need to pass what I will be using the input for so I can have a title for each
+   //need to pass what I will be using the input for so I can have a title for each and reuse component
         return (
           <TextInput style={styles.container}
             onChangeText={(text) => updateValue({text})}
