@@ -1,13 +1,44 @@
 
 import btoa from './btoa';
 
-//takes array of data and changes it to represent hexadecimal
-export function string2Hex(str) {
-    const arrHex = str.map(splitItem => {
-        return splitItem.charCodeAt(0).toString(16)
-    })
-    return (arrHex);
+const packetTypes = {
+    temperature: '5',
+    spo2: '4',
+}
 
+const packetTranslation = Object.entries(packetTypes).reduce((acc, [value, key]) => ({ ...acc, [key]: value }), {})
+
+function parseSpo2(data) {
+    const [status, saturation, pulse] = data;
+
+    return {
+            status,
+            data: {
+                saturation,
+                pulseRate: pulse,
+            }
+        }
+}
+
+function parseTemperature(data) {
+    const [status, integral, decimal] = data;
+
+    console.log('parsing Temperature');
+
+    return {
+        status,
+        data: `${integral}.${decimal}`
+    }
+}
+
+function parsePacket(type, data) {
+    switch (type) {
+        case packetTypes.spo2:
+            return parseSpo2(data);
+        case packetTypes.temperature:
+            return parseTemperature(data);
+        default: return null;
+    }
 }
 
 //hex to string for sending commands to monitor
@@ -26,27 +57,46 @@ export function hexToBase64(str) {
     );
 }
 
-//takes data from monitor
-export function convertStringToByteArray(str) {
-    const split = str.split('');
+//takes array of data and changes it to represent hexadecimal
+function stringArray2HexArray(str) {
+    const arrHex = str.map(splitItem => {
+        return splitItem.charCodeAt(0).toString(16)
+    })
+    return (arrHex);
 
-    const hexString = string2Hex(split);
+}
+
+function definePacketType(data) {
+    const [_, ...packet] = data;
+
+    if (packet && packet.length) {
+        const [length, type, ...rest] = packet;
+        if (rest) {
+            const packetContents = rest.slice(0, length);
+            return [type, packetContents];
+        }
+    }
+
+    return [null, []];
+}
+
+export function convertStringToByteArray(str) {
+    const split = str.split('\n')[0].split('');
+
+    const hexString = stringArray2HexArray(split);
 
     //const buffer = new ArrayBuffer(256);
     //const view = Uint16Array.of(...split);
     //const asArray = Array.from(view);
 
-    return hexString;
+    const [type, data] = definePacketType(hexString);
+
+    const parsedData = parsePacket(type, data);
+
+    if (!parsedData) return [null, {}];
+
+    return [packetTranslation[type], parsedData];
+    // return hexString;
 }
 
-export function filterResults(data) {
-    const [_a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, ...rest] = data;
-    rest.pop();
-    if (rest[rest.length - 1] === 'aa') {
-        rest.pop();
-    }
-    if (rest[rest.length - 1] === '55') {
-        rest.pop();
-    }
-    return rest.map(value => `0x${value.padStart(2, '0')}`)
-}
+

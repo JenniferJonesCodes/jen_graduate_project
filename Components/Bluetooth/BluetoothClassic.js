@@ -9,6 +9,7 @@ import { Button } from 'react-native-elements';
 import Connecting from './Connecting';
 import DeviceList from './DeviceList';
 import { hexToBase64, convertStringToByteArray, filterResults } from './lib/converters';
+import { dataParser } from './lib/dataParser';
 
 const initialState = {
   enabled: true,
@@ -16,13 +17,13 @@ const initialState = {
   selectedDevice: null,
   connected: false,
   error: false,
-  data: [],
+  data: {},
   isReading: false,
 }
 const actions = {
-  devicesReceived: "devicesReceived",
-  disabled: "disabled",
-  deviceSelected: "deviceSelected",
+  devicesReceived: 'devicesReceived',
+  disabled: 'disabled',
+  deviceSelected: 'deviceSelected',
   connected: 'connected',
   connectingFailed: 'connectingFailed',
   startedReading: 'startedReading',
@@ -72,7 +73,10 @@ function reducer(state, action) {
     case actions.dataReceived:
       return {
         ...state,
-        data: [...state.data, action.payload.data]
+        data: {
+          ...state.data,
+          [action.payload.type]: action.payload.data,
+        },
       }
     default: return state;
   }
@@ -133,26 +137,38 @@ function startedReading() {
   }
 }
 
-function dataReceived(data) {
+function dataReceived(type, data) {
   return {
     type: actions.dataReceived,
     payload: {
+      type,
       data
     }
   }
 }
 
 const handleDataIn = dispatch => ({ data }) => {
-  const encoded = filterResults(convertStringToByteArray(data));
-  if (encoded.length) {
-    // dispatch(dataReceived(encoded));
-    console.log("TCL: encoded", encoded)
+  //console.log("TCL: data", data)
+  // const parsedData = dataParser({data});
+  // if (parsedData[0] != 'spo2' && parsedData[1].length >0){
+  //   console.log("parsedData", parsedData);
+  // }
+  //const encoded = filterResults(convertStringToByteArray(data));
+  //if (encoded.length) {
+  // dispatch(dataReceived(encoded));
+  //console.log("TCL: encoded", encoded)
+  //}
+  const [type, packetContents] = convertStringToByteArray(data);
+  if (type) {
+    dispatch(dataReceived(type, packetContents));
   }
 }
 
 function read(dispatch, readHandler) {
   return async function () {
-    await Bluetooth.withDelimiter('\n');
+    // const result = await Bluetooth.readFromDevice();
+    // console.log("TCL: read -> result", result)
+    await Bluetooth.withDelimiter('\U');
     try {
       dispatch(startedReading());
       Bluetooth.on('read', readHandler)
@@ -175,10 +191,27 @@ function stopReading(dispatch, readHandler) {
   }
 }
 
-async function writeTemperature() {
-  const temperatureCommand = hexToBase64("55 AA 04 04 01 F6");
-  const didWrite = await Bluetooth.writeToDevice(temperatureCommand);
-  console.log("didWrite", didWrite);
+function handleLogData(data) {
+  return function logData(_e) {
+    console.log("TCL: handleLogData -> data", data)
+  }
+}
+
+async function enableTemperature() {
+  // const command = hexToBase64("55 AA 04 04 01 F6");
+  // const command = "55 AA 04 04 01 F6";
+
+  const didWrite = Bluetooth.write("0x55 0xaa 0x04 0x04 0x01 0xf6")
+  //const didWrite = await Bluetooth.enableTemperature();
+  console.log("didWrite enable temperature", didWrite);
+}
+
+async function disableSPO2() {
+  const command = hexToBase64("55 aa 04 04 00 f8");
+  // const command = "55 AA 04 03 00 F8";
+
+  const didWrite = await Bluetooth.writeToDevice(command);
+  console.log("didWrite disable sp02", didWrite);
 }
 
 function BluetoothClassic() {
@@ -227,41 +260,67 @@ function BluetoothClassic() {
         connected && <ReceiveDataButton disabled={isReading} onPress={read(dispatch, readHandler)} />
       }
       {
+        isReading && <LogDataButton onPress={handleLogData(data)} />
+      }
+      {
         isReading && <StopDataButton onPress={stopReading(dispatch, readHandler)} />
       }
       {
-        connected && isReading && <EnableTemparature onPress={writeTemperature} />
+        typeof data.temperature !== 'undefined' && <DisplayTemperature data={data.temperature} />
+      }
+      {
+        typeof data.temperature !== 'undefined' && <DisplaySpo2 data={data.spo2} />
       }
     </View>
   );
 }
 
-function ReceiveDataButton({ onPress }) {
+function DisplayTemperature({ data: { status, data } }) {
+  return (
+    <>
+      <Text>Temperature</Text>
+      <Text>status: {status} and value: {data}</Text>
+    </>
+  )
+}
+
+function DisplaySpo2({ data: { status, data } }) {
+  return (
+    <>
+      <Text>Spo2</Text>
+      <Text>status: {status} and saturation: {data.saturation} and PR: {data.pulseRate}</Text>
+    </>
+  )
+}
+
+function ReceiveDataButton(props) {
   return (
     <Button
       title="Read Data"
       type="outline"
-      onPress={onPress}
+      {...props}
     />
   )
 }
 
-function StopDataButton({ onPress }) {
+function StopDataButton(props) {
   return (
     <Button
       title="Stop Data"
       type="outline"
-      onPress={onPress}
+      {...props}
     />
   )
 }
 
-function EnableTemparature({ onPress }) {
-  return (<Button
-    title="Enable Temperature"
-    type="outline"
-    onPress={onPress}
-  />);
+function LogDataButton(props) {
+  return (
+    <Button
+      title="Log Data"
+      type="outline"
+      {...props}
+    />
+  )
 }
 
 
