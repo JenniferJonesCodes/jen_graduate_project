@@ -20,6 +20,7 @@ const initialState = {
   data: {},
   isReading: false,
 }
+
 const actions = {
   devicesReceived: 'devicesReceived',
   disabled: 'disabled',
@@ -118,19 +119,6 @@ function connectingFailed() {
   }
 }
 
-function connect(dispatch) {
-  return async function (device) {
-    dispatch(deviceSelected(device));
-    try {
-      await Bluetooth.connect(device.id);
-      dispatch(connected())
-    } catch (error) {
-      dispatch(connectingFailed());
-      console.log(error);
-    }
-  }
-}
-
 function startedReading() {
   return {
     type: actions.startedReading,
@@ -147,27 +135,32 @@ function dataReceived(type, data) {
   }
 }
 
-const handleDataIn = dispatch => ({ data }) => {
-  //console.log("TCL: data", data)
-  // const parsedData = dataParser({data});
-  // if (parsedData[0] != 'spo2' && parsedData[1].length >0){
-  //   console.log("parsedData", parsedData);
-  // }
-  //const encoded = filterResults(convertStringToByteArray(data));
-  //if (encoded.length) {
-  // dispatch(dataReceived(encoded));
-  //console.log("TCL: encoded", encoded)
-  //}
-  const [type, packetContents] = convertStringToByteArray(data);
-  if (type) {
-    dispatch(dataReceived(type, packetContents));
+function connect(dispatch) {
+  return async function (device) {
+    dispatch(deviceSelected(device));
+    try {
+      await Bluetooth.connect(device.id);
+      dispatch(connected())
+    } catch (error) {
+      dispatch(connectingFailed());
+      console.log(error);
+    }
+  }
+}
+
+function handleDataIn(dispatch) {
+  return function ({ data }) {
+
+    //parsed data
+    const [type, packetContents] = convertStringToByteArray(data);
+    if (type) {
+      dispatch(dataReceived(type, packetContents));
+    }
   }
 }
 
 function read(dispatch, readHandler) {
   return async function () {
-    // const result = await Bluetooth.readFromDevice();
-    // console.log("TCL: read -> result", result)
     await Bluetooth.withDelimiter('\U');
     try {
       dispatch(startedReading());
@@ -197,23 +190,6 @@ function handleLogData(data) {
   }
 }
 
-async function enableTemperature() {
-  // const command = hexToBase64("55 AA 04 04 01 F6");
-  // const command = "55 AA 04 04 01 F6";
-
-  const didWrite = Bluetooth.write("0x55 0xaa 0x04 0x04 0x01 0xf6")
-  //const didWrite = await Bluetooth.enableTemperature();
-  console.log("didWrite enable temperature", didWrite);
-}
-
-async function disableSPO2() {
-  const command = hexToBase64("55 aa 04 04 00 f8");
-  // const command = "55 AA 04 03 00 F8";
-
-  const didWrite = await Bluetooth.writeToDevice(command);
-  console.log("didWrite disable sp02", didWrite);
-}
-
 function BluetoothClassic() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -231,6 +207,7 @@ function BluetoothClassic() {
       })
   }, []); // due to empty dependency array will only run once
 
+  //usecallback prevents readHandler from being a new function every time we rerender, we want to stop reading on same listner not a new one
   const readHandler = useCallback(handleDataIn(dispatch), [dispatch]);
 
   const { enabled, devices, selectedDevice, error, connected, isReading, data } = state;
@@ -266,19 +243,39 @@ function BluetoothClassic() {
         isReading && <StopDataButton onPress={stopReading(dispatch, readHandler)} />
       }
       {
+        isReading && <ReadBloodPressure onPress={enableBloodPressure} />
+      }
+      {
+        typeof data.NIBP !== 'undefined' && <DisplayNIBP data={data.NIBP} />
+      }
+      {
         typeof data.temperature !== 'undefined' && <DisplayTemperature data={data.temperature} />
       }
       {
-        typeof data.temperature !== 'undefined' && <DisplaySpo2 data={data.spo2} />
+        typeof data.spo2 !== 'undefined' && <DisplaySpo2 data={data.spo2} />
       }
     </View>
   );
 }
 
+
+function DisplayNIBP({ data: { status, cuff, sys, mean, dia }}){
+  return(
+    <>
+      <Text>BLOOD PRESSURE</Text>
+      <Text>status: {status}</Text> 
+      <Text>cuff: {cuff}</Text> 
+      <Text>sys: {sys}</Text> 
+      <Text>mean: {mean}</Text> 
+      <Text>status: {dia}</Text> 
+    </>
+  )
+}
+
 function DisplayTemperature({ data: { status, data } }) {
   return (
     <>
-      <Text>Temperature</Text>
+      <Text>TEMPERATURE</Text>
       <Text>status: {status} and value: {data}</Text>
     </>
   )
@@ -287,10 +284,29 @@ function DisplayTemperature({ data: { status, data } }) {
 function DisplaySpo2({ data: { status, data } }) {
   return (
     <>
-      <Text>Spo2</Text>
+      <Text>SPO2</Text>
       <Text>status: {status} and saturation: {data.saturation} and PR: {data.pulseRate}</Text>
     </>
   )
+}
+
+function ReadBloodPressure(props){
+  return (
+    <Button 
+      title="Read Blood Pressure"
+      type="outline"
+      {...props}
+    />
+  )
+}
+
+//enable 55 aa 4 2 1 f8 disable 55 aa 4 2 0 f9
+async function enableBloodPressure(){
+  const command = hexToBase64("55 aa 04 02 01 f8");
+  // console.log("TCL: enableBloodPressure -> command", command)
+  const didWrite = await Bluetooth.writeToDevice(command)
+  // console.log("TCL: enableBloodPressure -> didWrite", didWrite)
+  return didWrite
 }
 
 function ReceiveDataButton(props) {
