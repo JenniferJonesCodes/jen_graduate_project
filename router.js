@@ -11,10 +11,10 @@ import Bluetooth from './Screens/Bluetooth';
 let screen = Dimensions.get('window');
 
 const TabNavigator = createBottomTabNavigator({
+  Bluetooth,
   Search,
   Vitals,
-  Profile,
-  Bluetooth
+  Profile
 });
 
 

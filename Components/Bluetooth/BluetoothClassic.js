@@ -8,8 +8,7 @@ import {
 import { Button } from 'react-native-elements';
 import Connecting from './Connecting';
 import DeviceList from './DeviceList';
-import { hexToBase64, convertStringToByteArray, filterResults } from './lib/converters';
-import { dataParser } from './lib/dataParser';
+import { hexToBase64, convertStringToByteArray } from './lib/converters';
 
 const initialState = {
   enabled: true,
@@ -259,15 +258,17 @@ function BluetoothClassic() {
 }
 
 
-function DisplayNIBP({ data: { status, cuff, sys, mean, dia }}){
+function DisplayNIBP({ data }){
+  const { status } = data;
+  const { cuff, sys, mean, dia } = data.data;
+  console.log("TCL: DisplayNIBP -> data.data", data.data)
   return(
     <>
       <Text>BLOOD PRESSURE</Text>
       <Text>status: {status}</Text> 
       <Text>cuff: {cuff}</Text> 
       <Text>sys: {sys}</Text> 
-      <Text>mean: {mean}</Text> 
-      <Text>status: {dia}</Text> 
+      <Text>dia: {dia}</Text> 
     </>
   )
 }
@@ -276,7 +277,8 @@ function DisplayTemperature({ data: { status, data } }) {
   return (
     <>
       <Text>TEMPERATURE</Text>
-      <Text>status: {status} and value: {data}</Text>
+      <Text>status: {status} </Text>
+      <Text>value: {data}</Text>
     </>
   )
 }
@@ -285,7 +287,9 @@ function DisplaySpo2({ data: { status, data } }) {
   return (
     <>
       <Text>SPO2</Text>
-      <Text>status: {status} and saturation: {data.saturation} and PR: {data.pulseRate}</Text>
+      <Text>status: {status} </Text>
+      <Text>saturation: {data.saturation} </Text>
+      <Text>PR: {data.pulseRate}</Text>
     </>
   )
 }

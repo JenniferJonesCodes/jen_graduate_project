@@ -19,11 +19,12 @@ function parseNIBP(data){
     console.log("TCL: parseNIBP -> data", data)
 
     return{
+        status: status,
         data: {
             cuff: hex2Number(cuff)*2,
             sys: hex2Number(sys),
-            mean: hex2Number(mean),
-            dia: hex2Number(dia)
+            //mean: hex2Number(mean),
+            dia: hex2Number(dia),
         }
     }
 }
@@ -133,9 +134,9 @@ export function convertStringToByteArray(str) {
 
     if(hexString[2] ==='3'){
         console.log('nibp');
+        console.log("TCL: convertStringToByteArray -> str", str)  
+        console.log("TCL: convertStringToByteArray -> split", split)  
         console.log("TCL: convertStringToByteArray -> hexString", hexString)
-        console.log("TCL: convertStringToByteArray -> split", split)
-        console.log("TCL: convertStringToByteArray -> str", str)    
     }
 
     //takes data packet and pulls first index off which is packet type
