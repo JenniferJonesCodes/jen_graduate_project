@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-import SearchForm from "./../Components/SearchForm";
+import LoginForm from "./../Components/LoginForm";
 
-const Search = () => (
+const Login = () => (
   <View style={styles.conatiner}>
-    <Text style={styles.title}>Search</Text>
-    <SearchForm />
+    <Text style={styles.title}>Login</Text>
+    <LoginForm />
   </View>
 );
 
@@ -16,9 +16,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20
-    // textAlign: 'center',
-    // margin: 10,
   }
 });
 
-export default Search;
+export default Login;
