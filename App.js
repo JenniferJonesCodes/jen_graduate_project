@@ -1,14 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import Router from "./router";
+import Login from "./Screens/Login";
 
 const instructions = Platform.select({
   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
@@ -17,9 +10,19 @@ const instructions = Platform.select({
     "Shake or press menu button for dev menu"
 });
 
-export default class App extends Component {
-  render() {
+// const testInitialState = {
+//   isLoggedIn: true
+// };
+
+function App() {
+  const [isLoggedIn, setUser] = useState(false);
+  //setUser(true);
+  if (isLoggedIn == true) {
+    console.log("is loggedin", isLoggedIn);
     return <Router />;
+  } else {
+    console.log("notloggedin", isLoggedIn);
+    return <Login />;
   }
 }
 
@@ -41,3 +44,5 @@ const styles = StyleSheet.create({
     marginBottom: 5
   }
 });
+
+export default App;
