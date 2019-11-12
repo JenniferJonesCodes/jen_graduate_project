@@ -23,13 +23,13 @@ const SearchForm = props => {
       render={({ fields, updateField }) => (
         <>
           <FormField
-            placeholder=" first name"
+            placeholder="patient first name"
             id="first_name"
             fields={fields}
             updateField={updateField}
           />
           <FormField
-            placeholder="last name"
+            placeholder="patient last name"
             id="last_name"
             fields={fields}
             updateField={updateField}

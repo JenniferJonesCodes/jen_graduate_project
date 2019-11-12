@@ -15,7 +15,7 @@ const instructions = Platform.select({
 // };
 
 function App() {
-  const [isLoggedIn, setUser] = useState(false);
+  const [isLoggedIn, setUser] = useState(true);
   //setUser(true);
   if (isLoggedIn == true) {
     console.log("is loggedin", isLoggedIn);

@@ -4,7 +4,7 @@ import SearchForm from "./../Components/SearchForm";
 
 const Search = () => (
   <View style={styles.conatiner}>
-    <Text style={styles.title}>Search</Text>
+    <Text style={styles.title}>Search Patient</Text>
     <SearchForm />
   </View>
 );
@@ -15,8 +15,8 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   title: {
-    fontSize: 20
-    // textAlign: 'center',
+    fontSize: 20,
+    textAlign: "center"
     // margin: 10,
   }
 });
