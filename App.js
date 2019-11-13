@@ -10,19 +10,21 @@ const instructions = Platform.select({
     "Shake or press menu button for dev menu"
 });
 
-// const testInitialState = {
-//   isLoggedIn: true
-// };
-
 function App() {
-  const [isLoggedIn, setUser] = useState(true);
-  //setUser(true);
-  if (isLoggedIn == true) {
-    console.log("is loggedin", isLoggedIn);
+  const [user, setUser] = useState(null);
+  console.log("TCL: App -> user", user);
+
+  function handleLogin(result) {
+    console.log("TCL: handleLogin -> result", result);
+    setUser(result);
+  }
+
+  if (user) {
+    //console.log("is loggedin", isLoggedIn);
     return <Router />;
   } else {
-    console.log("notloggedin", isLoggedIn);
-    return <Login />;
+    //console.log("notloggedin", isLoggedIn);
+    return <Login onSubmit={handleLogin} />;
   }
 }
 

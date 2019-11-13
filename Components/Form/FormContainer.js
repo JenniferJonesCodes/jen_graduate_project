@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { DrawerActions } from "react-navigation";
-import { View, Button } from "react-native";
+import { View } from "react-native";
+import { Button, Text } from "native-base";
+import { StyleSheet } from "react-native";
 
 const initialState = (defaultFields = {}) => ({
   fields: defaultFields,
@@ -111,10 +113,29 @@ function FormContainer({
   return (
     <View>
       <RenderProp fields={fields} updateField={onUpdateField} />
-      <Button disabled={inProgress} onPress={handleSubmit} title={submitText} />
+      <Button
+        light
+        rounded
+        disabled={inProgress}
+        onPress={handleSubmit}
+        style={styles.button}
+      >
+        <Text> {submitText}</Text>
+      </Button>
       {error}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "monospace",
+    marginTop: 20
+  }
+});
 
 export default FormContainer;

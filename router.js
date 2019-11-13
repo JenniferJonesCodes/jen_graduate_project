@@ -11,12 +11,20 @@ import Bluetooth from "./Screens/Bluetooth";
 
 let screen = Dimensions.get("window");
 
-const TabNavigator = createBottomTabNavigator({
-  //Login,
-  Bluetooth,
-  Search,
-  Vitals,
-  Profile
-});
+const TabNavigator = createBottomTabNavigator(
+  {
+    //Login,
+    Bluetooth,
+    Search
+    //Vitals,
+    //Profile
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: "black",
+      inactiveTintColor: "gray"
+    }
+  }
+);
 
 export default createAppContainer(TabNavigator);

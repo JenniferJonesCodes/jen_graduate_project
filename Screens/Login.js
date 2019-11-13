@@ -2,20 +2,26 @@ import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 import LoginForm from "./../Components/LoginForm";
 
-const Login = () => (
-  <View style={styles.conatiner}>
+const Login = ({ onSubmit }) => (
+  <View style={styles.container}>
     <Text style={styles.title}>Login</Text>
-    <LoginForm />
+    <LoginForm onSubmit={onSubmit} />
   </View>
 );
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center"
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffc3b5"
   },
   title: {
-    fontSize: 20
+    fontSize: 40,
+    fontFamily: "sans-serif-medium",
+    color: "#302a29",
+    paddingBottom: 20
   }
 });
 

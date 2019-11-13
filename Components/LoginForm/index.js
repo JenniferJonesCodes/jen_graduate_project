@@ -7,7 +7,7 @@ const {
   session: { create: login }
 } = client;
 
-const LoginForm = props => {
+const LoginForm = ({ onSubmit }) => {
   console.log("TCL: client", client);
   console.log("TCL: login", login);
   return (
@@ -17,9 +17,12 @@ const LoginForm = props => {
         // something like this to submit data and save in state
         //const result = await search(fields);
         //setState(result);
-        const success = await login(fields);
-        if (!success) throw new Error("could not login");
-        console.log("login success");
+        // const success = await login(fields);
+        // if (!success) throw new Error("could not login");
+        // console.log("login success");
+        onSubmit({
+          name: fields.user_name
+        });
       }}
       submitText="Login"
       render={({ fields, updateField }) => (
