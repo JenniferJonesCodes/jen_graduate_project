@@ -8,5 +8,6 @@ module.exports = async function sessionTest() {
     console.log("sessionTest failed");
   } else {
     console.log("sessionTest passed");
+    console.log("TCL: sessionTest -> result", result);
   }
 };

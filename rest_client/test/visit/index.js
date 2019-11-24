@@ -3,6 +3,7 @@ const {
   visit: { search, get }
 } = require("../../src/");
 
+//gets visit information using patientID
 module.exports = async function testVisit(patientID) {
   const visitSearchResult = await search({ q: patientID });
   const visitId = visitSearchResult[0].uuid;

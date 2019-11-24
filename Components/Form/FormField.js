@@ -6,14 +6,13 @@ import { Item, Input } from "native-base";
 const FormField = ({ fields, updateField, id, placeholder, ...otherProps }) => {
   //need to pass what I will be using the input for so I can have a title for each and reuse component
   return (
-    <Item
-      rounded
-      style={styles.container}
-      onChangeText={text => updateField(id, text)}
-      value={fields[id]}
-      {...otherProps}
-    >
-      <Input placeholder={placeholder} />
+    <Item rounded style={styles.container}>
+      <Input
+        placeholder={placeholder}
+        onChangeText={text => updateField(id, text)}
+        value={fields[id]}
+        {...otherProps}
+      />
     </Item>
   );
 };

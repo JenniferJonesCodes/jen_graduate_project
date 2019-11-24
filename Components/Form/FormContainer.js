@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useReducer } from "react";
-import { DrawerActions } from "react-navigation";
-import { View } from "react-native";
+import React, { useReducer } from "react";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { Button, Text } from "native-base";
-import { StyleSheet } from "react-native";
 
 const initialState = (defaultFields = {}) => ({
   fields: defaultFields,
@@ -61,7 +59,7 @@ function reducer(state, action) {
     case actions.error:
       return {
         ...state,
-        error: true,
+        error: action.payload.error,
         inProgress: false,
         success: false
       };
@@ -93,7 +91,6 @@ function FormContainer({
   const [state, dispatch] = useReducer(reducer, initialState(defaultFields));
 
   async function handleSubmit(event) {
-    console.log("submitting form");
     dispatch(onSubmit());
     try {
       await submit(state.fields);
@@ -104,12 +101,10 @@ function FormContainer({
   }
 
   function onUpdateField(id, value) {
-    console.log("TCL: onUpdateField -> id, value", id, value);
     dispatch(updateField(id, value));
   }
 
   const { fields, error, success, inProgress } = state;
-  console.log("TCL: state", state);
   return (
     <View>
       <RenderProp fields={fields} updateField={onUpdateField} />
@@ -120,9 +115,13 @@ function FormContainer({
         onPress={handleSubmit}
         style={styles.button}
       >
-        <Text> {submitText}</Text>
+        {inProgress ? (
+          <ActivityIndicator size="small" color="#000000" />
+        ) : (
+          <Text>{submitText}</Text>
+        )}
       </Button>
-      {error}
+      <Text>{error}</Text>
     </View>
   );
 }

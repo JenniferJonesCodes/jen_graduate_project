@@ -4,6 +4,7 @@ const defaultParams = {
   limit: 2
 };
 
+//search for a patient using name to get patient id
 module.exports.search = async function searchPatients(params = {}) {
   try {
     const response = await client({
@@ -21,6 +22,7 @@ module.exports.search = async function searchPatients(params = {}) {
   }
 };
 
+//use patient id to get patient info
 module.exports.get = async function getPatient(uuid, params = {}) {
   try {
     const response = await client({

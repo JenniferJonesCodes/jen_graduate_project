@@ -1,13 +1,18 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
+import { useSession } from "../Entities/Session";
 import LoginForm from "./../Components/LoginForm";
 
-const Login = ({ onSubmit }) => (
-  <View style={styles.container}>
-    <Text style={styles.title}>Login</Text>
-    <LoginForm onSubmit={onSubmit} />
-  </View>
-);
+const Login = ({}) => {
+  const { login } = useSession();
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
+      <LoginForm onSubmit={login} />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

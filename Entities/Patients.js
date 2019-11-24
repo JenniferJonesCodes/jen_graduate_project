@@ -1,62 +1,60 @@
+//mock
+
 import Axios from "axios";
 
 export default class Patients {
-    static async get(id) {
-        try {
-            const res = await Axios({
-                method: 'get',
-                url: `localhost:3000/patients/${id}`,
-            });
-            return res.data;
-        } catch (error) {
-            console.log("TCL: Patients -> get -> error", error)
-            return null;
-        }
+  static async get(id) {
+    try {
+      const res = await Axios({
+        method: "get",
+        url: `localhost:3000/patients/${id}`
+      });
+      return res.data;
+    } catch (error) {
+      return null;
     }
+  }
 
-    static async lookup({ first_name, last_name, dob }) {
-        try {
-            const res = await Axios({
-                method: 'get',
-                url: `localhost:3000/patients/?first_name=${first_name}&last_name=${last_name}&dob=${dob}`,
-            });
+  static async lookup({ first_name, last_name, dob }) {
+    try {
+      const res = await Axios({
+        method: "get",
+        url: `localhost:3000/patients/?first_name=${first_name}&last_name=${last_name}&dob=${dob}`
+      });
 
-            return res.data;
-        } catch (error) {
-            console.log("TCL: Patients -> lookup -> error", error)
-            return null
-        }
+      return res.data;
+    } catch (error) {
+      return null;
     }
+  }
 
-    static async create(fields) {
-        try {
-            const res = await Axios({
-                method: 'post',
-                url: `localhost:3000/patients/`,
-                body: fields,
-            });
+  static async create(fields) {
+    try {
+      const res = await Axios({
+        method: "post",
+        url: `localhost:3000/patients/`,
+        body: fields
+      });
 
-            return res.data;
-        } catch (error) {
-            console.log("TCL: Patients -> create -> error", error)
-            return null;
-        }
+      return res.data;
+    } catch (error) {
+      return null;
     }
+  }
 
-    static async update(id, fields) {
-        try {
-            const res = await Axios({
-                method: 'put',
-                url: `localhost:3000/patients/${id}`,
-                body: fields,
-            });
+  static async update(id, fields) {
+    try {
+      const res = await Axios({
+        method: "put",
+        url: `localhost:3000/patients/${id}`,
+        body: fields
+      });
 
-            return res.data;
-        } catch (error) {
-            console.log("TCL: Patients -> update -> error", error)
-            return null;
-        }
+      return res.data;
+    } catch (error) {
+      return null;
     }
+  }
 }
 
 // Examples:
