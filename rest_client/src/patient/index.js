@@ -1,8 +1,6 @@
 const client = require("../lib/client");
 
-const defaultParams = {
-  limit: 2
-};
+const defaultParams = {};
 
 //search for a patient using name to get patient id
 module.exports.search = async function searchPatients(params = {}) {
@@ -15,9 +13,11 @@ module.exports.search = async function searchPatients(params = {}) {
       }
     });
 
+    console.log("TCL: searchPatients -> response.data", response.data);
     return response.data.results;
   } catch (error) {
     console.log("TCL: searchPatients -> error", error);
+    console.log("TCL: searchPatients -> error.response", error.response);
     return false;
   }
 };
