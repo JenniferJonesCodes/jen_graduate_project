@@ -6,15 +6,15 @@ const invalidUserError = "Username or password is incorrect, please try again.";
 //request with username:password in base64
 module.exports.create = async function create(username, password) {
   try {
-    const base64Credentials = Buffer.from(`${username}:${password}`).toString(
-      "base64"
-    );
+    const base64Credentials = `Basic ${Buffer.from(
+      `${username}:${password}`
+    ).toString("base64")}`;
 
     const response = await client({
       url: "session",
       method: "get",
       headers: {
-        Authorization: `Basic ${base64Credentials}`
+        Authorization: base64Credentials
       }
     });
 
@@ -22,9 +22,9 @@ module.exports.create = async function create(username, password) {
       throw new Error(invalidUserError);
     }
 
-    const tokenCookie = response.headers["set-cookie"][0].split(";")[0];
+    // const tokenCookie = response.headers["set-cookie"][0].split(";")[0];
 
-    client.setToken(tokenCookie);
+    client.setToken(base64Credentials);
 
     return response.data.user;
   } catch (error) {
