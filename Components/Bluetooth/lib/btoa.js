@@ -1,15 +1,15 @@
-const Buffer = require('buffer').Buffer;
+const Buffer = require("buffer").Buffer;
 
 function btoa(str) {
-    var buffer;
+  var buffer;
 
-    if (str instanceof Buffer) {
-      buffer = str;
-    } else {
-      buffer = Buffer.from(str.toString(), 'binary');
-    }
-
-    return buffer.toString('base64');
+  if (str instanceof Buffer) {
+    buffer = str;
+  } else {
+    buffer = Buffer.from(str.toString(), "binary");
   }
 
-  export default btoa;
+  return buffer.toString("base64");
+}
+
+export default btoa;
