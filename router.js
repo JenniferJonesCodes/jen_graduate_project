@@ -1,30 +1,35 @@
-import React, { Component } from "react";
-import { Dimensions, Platform } from "react-native";
+import React from "react";
+import { Dimensions } from "react-native";
 import { createBottomTabNavigator, createAppContainer } from "react-navigation";
-// import { Icon } from 'react-native-elements';
-
-//import Login from "./Screens/Login";
-import Profile from "./Screens/Profile";
 import Search from "./Screens/Search";
-import Vitals from "./Screens/Vitals";
 import Bluetooth from "./Screens/Bluetooth";
+import { usePatients } from "./Entities/Patients";
 
 let screen = Dimensions.get("window");
 
-const TabNavigator = createBottomTabNavigator(
-  {
-    //Login,
-    Bluetooth,
-    Search
-    //Vitals,
-    //Profile
-  },
-  {
-    tabBarOptions: {
-      activeTintColor: "black",
-      inactiveTintColor: "gray"
-    }
-  }
-);
+// const TabNavigator = createBottomTabNavigator(
+//   {
+//     Bluetooth,
+//     Search
+//   },
+//   {
+//     tabBarOptions: {
+//       activeTintColor: "black",
+//       inactiveTintColor: "gray"
+//     }
+//   }
+// );
 
-export default createAppContainer(TabNavigator);
+// export default createAppContainer(TabNavigator);
+
+function Router() {
+  const { activePatient } = usePatients();
+
+  if (activePatient) {
+    return <Bluetooth />;
+  } else {
+    return <Search />;
+  }
+}
+
+export default Router;

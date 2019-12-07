@@ -1,43 +1,42 @@
 import React, { useState, useEffect, useReducer } from "react";
+import { StyleSheet, Text } from "react-native";
 import FormContainer from "../Form/FormContainer";
 import FormField from "../Form/FormField";
+import { usePatients } from "../../Entities/Patients";
+import PatientsList from "../Patient/PatientsList";
 
-//persons selected person
-const initialState = {
-  persons: [],
-  slectedPerson: null
-};
-
-const SearchForm = props => {
-  //const [state, setState] = useState(null);
+const SearchForm = ({ onSubmit }) => {
+  const { patients } = usePatients();
 
   return (
-    <FormContainer
-      onSubmit={fields => {
-        console.log("form submit", fields);
-        // something like this to submit data and save in state
-        //const result = await login(fields);
-        //setState(result);
-      }}
-      submitText="Search"
-      render={({ fields, updateField }) => (
-        <>
-          <FormField
-            placeholder="patient first name"
-            id="first_name"
-            fields={fields}
-            updateField={updateField}
-          />
-          <FormField
-            placeholder="patient last name"
-            id="last_name"
-            fields={fields}
-            updateField={updateField}
-          />
-        </>
-      )}
-    />
+    <>
+      <Text style={styles.title}>Search</Text>
+      <FormContainer
+        onSubmit={onSubmit}
+        submitText="Search"
+        render={({ fields, updateField }) => (
+          <>
+            <FormField
+              placeholder="patient name or id"
+              id="q"
+              fields={fields}
+              updateField={updateField}
+            />
+          </>
+        )}
+      />
+      <PatientsList patients={patients} />
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 20,
+    textAlign: "center",
+    color: "#302a29",
+    marginBottom: 20
+  }
+});
 
 export default SearchForm;

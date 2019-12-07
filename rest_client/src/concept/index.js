@@ -4,7 +4,7 @@ const defaultParams = {
   limit: 2
 };
 
-//search for concepts
+//search for concept uuid for use in form on openMRS
 async function searchConcepts(term, params = {}) {
   try {
     const response = await client({
@@ -24,6 +24,7 @@ async function searchConcepts(term, params = {}) {
 
 module.exports.search = searchConcepts;
 
+//search for each concept id and return
 module.exports.getParamConcepts = async function getParamConcepts() {
   try {
     const temperatureResult = await searchConcepts("Temperature");

@@ -1,13 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
-import SearchForm from "./../Components/SearchForm";
+import { StyleSheet, View } from "react-native";
+import PatientSearch from "../Components/Patient/PatientSearch";
 
-const Search = () => (
-  <View style={styles.container}>
-    <Text style={styles.title}>Search Patient</Text>
-    <SearchForm />
-  </View>
-);
+const Search = ({}) => {
+  return (
+    <View style={styles.container}>
+      <PatientSearch />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

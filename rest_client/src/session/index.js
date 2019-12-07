@@ -3,7 +3,7 @@ const Buffer = require("buffer").Buffer;
 
 const invalidUserError = "Username or password is incorrect, please try again.";
 
-//request with username:password in base64
+//request with username:password in base64 for authentication
 module.exports.create = async function create(username, password) {
   try {
     const base64Credentials = `Basic ${Buffer.from(
@@ -18,6 +18,7 @@ module.exports.create = async function create(username, password) {
       }
     });
 
+    //if we dont have a user throw error
     if (!response.data.user) {
       throw new Error(invalidUserError);
     }
