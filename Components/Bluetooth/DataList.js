@@ -6,6 +6,7 @@ import DeviceList from "./DeviceList";
 import { hexToBase64 } from "./lib/converters";
 import { Data, DataContainer } from "./Data";
 
+//bluetooth view
 function DataList({
   state,
   readHandler,

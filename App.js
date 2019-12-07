@@ -4,6 +4,7 @@ import { PatientsProvider } from "./Entities/Patients";
 import Router from "./router";
 import Login from "./Screens/Login";
 
+//if logged in show router, if not logged in show login page
 function AuthGate() {
   const { user } = useSession();
 

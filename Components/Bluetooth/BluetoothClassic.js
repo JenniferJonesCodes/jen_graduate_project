@@ -3,6 +3,7 @@ import Bluetooth from "react-native-bluetooth-serial";
 import { convertStringToByteArray } from "./lib/converters";
 import DataList from "./DataList";
 
+//state for testing with app without machine
 const testInitialState = {
   enabled: true,
   devices: [],
@@ -56,6 +57,7 @@ const actions = {
   dataReceived: "dataReceived"
 };
 
+//takes state and action, based off action will update state
 function reducer(state, action) {
   switch (action.type) {
     case actions.devicesReceived:
@@ -221,6 +223,7 @@ function BluetoothClassic() {
   useEffect(() => {
     Bluetooth.isEnabled().then(async enabled => {
       if (enabled) {
+        //list - lists paired BT devices in BT lib
         const devices = await Bluetooth.list();
         dispatch(devicesReceived(devices));
       } else {
