@@ -31,7 +31,7 @@ module.exports.search = async function searchPatients(params = {}) {
   }
 };
 
-//use patient id to get patient info
+//use patient id to get patient object
 module.exports.get = async function getPatient(uuid, params = {}) {
   try {
     const response = await client({

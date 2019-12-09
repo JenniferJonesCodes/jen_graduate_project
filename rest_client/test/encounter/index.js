@@ -18,38 +18,38 @@ module.exports = async function testEncounter({ concepts, patientID }) {
       {
         concept: concepts.spo2,
         value: 97.0
-      },
-      {
-        concept: concepts.bloodPressure,
-        groupMembers: [
-          {
-            concept: concepts.diastolicData,
-            groupMembers: [
-              {
-                concept: concepts.diastolic,
-                value: 75
-              },
-              {
-                concept: concepts.diastolicAbnormal,
-                value: false
-              }
-            ]
-          },
-          {
-            concepts: concepts.systolicData,
-            groupMembers: [
-              {
-                concept: concepts.systolic,
-                value: 120
-              },
-              {
-                concept: concepts.systolicAbnormal,
-                value: false
-              }
-            ]
-          }
-        ]
       }
+      // {
+      //   concept: concepts.bloodPressure,
+      //   groupMembers: [
+      //     {
+      //       concept: concepts.diastolicData,
+      //       groupMembers: [
+      //         {
+      //           concept: concepts.diastolic,
+      //           value: 75
+      //         },
+      //         {
+      //           concept: concepts.diastolicAbnormal,
+      //           value: false
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       concepts: concepts.systolicData,
+      //       groupMembers: [
+      //         {
+      //           concept: concepts.systolic,
+      //           value: 120
+      //         },
+      //         {
+      //           concept: concepts.systolicAbnormal,
+      //           value: false
+      //         }
+      //       ]
+      //     }
+      //  ]
+      //}
       // {
       //   concept: "Blood Pressure",
       //   value: [

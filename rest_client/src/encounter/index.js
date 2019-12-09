@@ -1,8 +1,8 @@
 const client = require("../lib/client");
 
-const defaultParams = {
-  limit: 2
-};
+// const defaultParams = {
+//   limit: 2
+// };
 
 // create an encounter for a patient
 module.exports.create = async function createEncounter(patientID, params = {}) {

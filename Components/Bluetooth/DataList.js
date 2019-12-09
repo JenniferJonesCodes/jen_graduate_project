@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import Connecting from "./Connecting";
 import DeviceList from "./DeviceList";
 import { hexToBase64 } from "./lib/converters";
 import { Data, DataContainer } from "./Data";
+import { usePatients } from "../../Entities/Patients";
+import { useEncounter } from "../../Entities/Encounter";
+import { useConcepts } from "../../Entities/Concepts";
 
 //bluetooth view
 function DataList({
@@ -16,6 +19,7 @@ function DataList({
   connect,
   dispatch
 }) {
+  const { activePatient } = usePatients();
   const {
     enabled,
     devices,
@@ -56,8 +60,39 @@ function DataList({
         <DisplayTemperature data={data.temperature} />
       )}
       {typeof data.spo2 !== "undefined" && <DisplaySpo2 data={data.spo2} />}
+      {activePatient.uuid && <SaveDataButton data={data} />}
     </View>
   );
+}
+
+function SaveDataButton({ data }) {
+  const { activePatient } = usePatients();
+  const { concepts } = useConcepts();
+  const { create } = useEncounter();
+  console.log("concepts ", concepts);
+  function saveData() {
+    const params = {
+      encounterType: "Patient Document",
+      obs: [
+        {
+          concept: concepts.temperature,
+          value: data.temperature.data
+        },
+        {
+          concept: concepts.spo2,
+          value: data.spo2.data.saturation
+        }
+      ]
+    };
+    console.log("saveData -> activePatient", activePatient.uuid);
+    console.log("saveData -> data", data);
+    create(activePatient.uuid, params);
+    console.log("spo2 ", data.spo2.data.saturation);
+    console.log("spo2 ", data.temperature.data);
+  }
+  return concepts ? (
+    <Button title="Save Data" type="outline" onPress={saveData} />
+  ) : null;
 }
 
 function DisplayNIBP({ data }) {

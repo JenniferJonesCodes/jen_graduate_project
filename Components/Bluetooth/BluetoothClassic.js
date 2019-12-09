@@ -13,14 +13,14 @@ const testInitialState = {
   connected: true,
   error: false,
   data: {
-    NIBP: {
-      status: "normal",
-      data: {
-        sys: 100,
-        cuff: 100,
-        dia: 100
-      }
-    },
+    // NIBP: {
+    //   status: "normal",
+    //   data: {
+    //     sys: 100,
+    //     cuff: 100,
+    //     dia: 100
+    //   }
+    // },
     temperature: {
       status: "normal",
       data: "37.5"
@@ -217,7 +217,7 @@ function handleLogData(data) {
 }
 
 function BluetoothClassic() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, testInitialState);
 
   // runs when component is initialized
   useEffect(() => {
