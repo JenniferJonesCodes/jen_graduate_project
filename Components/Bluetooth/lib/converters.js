@@ -10,7 +10,7 @@ function hex2Number(str) {
   return parseInt(str, 16);
 }
 
-//opposite of packet types
+//opposite of packet types (reverse keys and values)
 const packetTranslation = Object.entries(packetTypes).reduce(
   (acc, [value, key]) => ({ ...acc, [key]: value }),
   {}
@@ -74,6 +74,7 @@ function parseTemperature(data) {
 }
 
 //passes data to data specific functions for processing
+//if its not one of these three then we do nothing
 function parsePacket(type, data) {
   switch (type) {
     case packetTypes.spo2:
@@ -88,6 +89,7 @@ function parsePacket(type, data) {
 }
 
 //hex to string for sending commands to monitor
+//**** Not being used
 export function hexToString(str) {
   const split = str.split("");
 
@@ -98,6 +100,7 @@ export function hexToString(str) {
 }
 
 //encode string to base 64
+//used to enable blood pressure reading with hex command
 export function hexToBase64(str) {
   return btoa(
     String.fromCharCode.apply(
@@ -112,6 +115,7 @@ export function hexToBase64(str) {
 }
 
 //takes array of data and changes it to represent hexadecimal
+//used in convertStringToByteArray
 function stringArray2HexArray(str) {
   const arrHex = str.map(splitItem => {
     return splitItem.charCodeAt(0).toString(16);
@@ -119,7 +123,8 @@ function stringArray2HexArray(str) {
   return arrHex;
 }
 
-//takes data packet and pulls first index off which is packet type
+//takes data packet and pulls first index, not using
+//destructure length and type off packet
 function definePacketType(data) {
   const [_, ...packet] = data;
   if (packet && packet.length) {

@@ -185,6 +185,8 @@ function handleDataIn(dispatch) {
   };
 }
 
+//subscription to data over bluetooth, sets up listener for read event
+//runs when readButton is clicked, sets up delimeter
 function read(dispatch, readHandler) {
   return async function() {
     await Bluetooth.withDelimiter("U");
@@ -217,7 +219,7 @@ function handleLogData(data) {
 }
 
 function BluetoothClassic() {
-  const [state, dispatch] = useReducer(reducer, testInitialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   // runs when component is initialized
   useEffect(() => {
@@ -233,7 +235,8 @@ function BluetoothClassic() {
     });
   }, []); // due to empty dependency array will only run once
 
-  //usecallback prevents readHandler from being a new function every time we rerender, we want to stop reading on same listner not a new one
+  //usecallback prevents readHandler from being a new function every time we rerender (memoize it)
+  //we want to stop reading on same listner not a new one
   const readHandler = useCallback(handleDataIn(dispatch), [dispatch]);
 
   return (
