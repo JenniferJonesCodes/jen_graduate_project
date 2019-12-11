@@ -2,7 +2,7 @@ import React from "react";
 import restClient from "../rest_client";
 
 const defaultValue = {
-  patients: [],
+  patients: null,
   activePatient: null,
   search: () => null,
   get: () => null
@@ -11,7 +11,7 @@ const defaultValue = {
 export const PatientsContext = React.createContext(defaultValue);
 
 export function PatientsProvider({ children }) {
-  const [patients, setPatients] = React.useState([]);
+  const [patients, setPatients] = React.useState(null);
   const [activePatient, setActivePatient] = React.useState(null);
 
   async function search(query) {

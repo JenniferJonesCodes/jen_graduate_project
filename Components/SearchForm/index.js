@@ -6,8 +6,6 @@ import { usePatients } from "../../Entities/Patients";
 import PatientsList from "../Patient/PatientsList";
 
 const SearchForm = ({ onSubmit }) => {
-  const { patients } = usePatients();
-
   return (
     <>
       <Text style={styles.title}>Search</Text>
@@ -25,7 +23,7 @@ const SearchForm = ({ onSubmit }) => {
           </>
         )}
       />
-      <PatientsList patients={patients} />
+      <PatientsList />
     </>
   );
 };
