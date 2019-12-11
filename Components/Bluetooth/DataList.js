@@ -1,25 +1,32 @@
 import React, { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-elements";
+import { StyleSheet, View } from "react-native";
+//import { Button } from "react-native-elements";
 import Connecting from "./Connecting";
 import DeviceList from "./DeviceList";
-import { hexToBase64 } from "./lib/converters";
 import { Data, DataContainer } from "./Data";
 import { usePatients } from "../../Entities/Patients";
 import { useEncounter } from "../../Entities/Encounter";
 import { useConcepts } from "../../Entities/Concepts";
+import { Button, Text } from "native-base";
 
 //bluetooth view
 function DataList({
   state,
   readHandler,
   stopReading,
-  handleLogData,
+  enableBloodPressure,
   read,
   connect,
   dispatch
 }) {
   const { activePatient } = usePatients();
+  const { activeEncounter } = useEncounter();
+  console.log("TCL: activeEncounter", activeEncounter);
+
+  const stopReadingHandler = React.useCallback(
+    stopReading(dispatch, readHandler),
+    [dispatch, readHandler]
+  );
   const {
     enabled,
     devices,
@@ -43,55 +50,65 @@ function DataList({
       {enabled && selectedDevice && !connected && (
         <Connecting device={selectedDevice} />
       )}
-      {connected && <Text>Connected to {selectedDevice.name}</Text>}
       {connected && (
+        <>
+          <Text style={styles.text}>Connected to {selectedDevice.name}</Text>
+          <Text style={styles.text}>Patient: {activePatient.display}</Text>
+        </>
+      )}
+      {!isReading && connected && (
         <ReceiveDataButton
           disabled={isReading}
           onPress={read(dispatch, readHandler)}
         />
       )}
-      {isReading && <LogDataButton onPress={handleLogData(data)} />}
-      {isReading && (
-        <StopDataButton onPress={stopReading(dispatch, readHandler)} />
-      )}
+      {isReading && <StopDataButton onPress={stopReadingHandler} />}
       {isReading && <ReadBloodPressure onPress={enableBloodPressure} />}
       {typeof data.NIBP !== "undefined" && <DisplayNIBP data={data.NIBP} />}
       {typeof data.temperature !== "undefined" && (
         <DisplayTemperature data={data.temperature} />
       )}
       {typeof data.spo2 !== "undefined" && <DisplaySpo2 data={data.spo2} />}
-      {activePatient.uuid && <SaveDataButton data={data} />}
+      {connected && activePatient.uuid && (
+        <SaveDataButton data={data} stopReading={stopReadingHandler} />
+      )}
     </View>
   );
 }
 
-function SaveDataButton({ data }) {
+function SaveDataButton({ data, stopReading }) {
   const { activePatient } = usePatients();
   const { concepts } = useConcepts();
   const { create } = useEncounter();
   console.log("concepts ", concepts);
   function saveData() {
+    stopReading();
+    const obs = [];
+    if (data.temperature.data) {
+      obs.push({
+        concept: concepts.temperature,
+        value: data.temperature.data
+      });
+    }
+    if (data.spo2.data.saturation) {
+      obs.push({
+        concept: concepts.spo2,
+        value: data.spo2.data.saturation
+      });
+    }
     const params = {
       encounterType: "Patient Document",
-      obs: [
-        {
-          concept: concepts.temperature,
-          value: data.temperature.data
-        },
-        {
-          concept: concepts.spo2,
-          value: data.spo2.data.saturation
-        }
-      ]
+      obs: obs
     };
-    console.log("saveData -> activePatient", activePatient.uuid);
-    console.log("saveData -> data", data);
+
     create(activePatient.uuid, params);
     console.log("spo2 ", data.spo2.data.saturation);
-    console.log("spo2 ", data.temperature.data);
+    console.log("temp ", data.temperature.data);
   }
   return concepts ? (
-    <Button title="Save Data" type="outline" onPress={saveData} />
+    <Button light rounded large block style={styles.button} onPress={saveData}>
+      <Text>Save Data</Text>
+    </Button>
   ) : null;
 }
 
@@ -101,10 +118,10 @@ function DisplayNIBP({ data }) {
   console.log("TCL: DisplayNIBP -> data.data", data.data);
   return (
     <DataContainer title="BLOOD PRESSURE">
-      <Data label="status">{status} </Data>
-      <Data label="cuff pressure"> {cuff}</Data>
-      <Data label="systolic"> {sys}</Data>
-      <Data label="diastolic"> {dia}</Data>
+      <Data label="Status">{status} </Data>
+      <Data label="Cuff Pressure"> {cuff}</Data>
+      <Data label="Systolic"> {sys}</Data>
+      <Data label="Diastolic"> {dia}</Data>
     </DataContainer>
   );
 }
@@ -112,8 +129,8 @@ function DisplayNIBP({ data }) {
 function DisplayTemperature({ data: { status, data } }) {
   return (
     <DataContainer title="TEMPERATURE">
-      <Data label="status">{status} </Data>
-      <Data label="temperature">{data}</Data>
+      <Data label="Status">{status} </Data>
+      <Data label="Temperature">{data}</Data>
     </DataContainer>
   );
 }
@@ -121,42 +138,52 @@ function DisplayTemperature({ data: { status, data } }) {
 function DisplaySpo2({ data: { status, data } }) {
   return (
     <DataContainer title="SPO2">
-      <Data label="status">{status} </Data>
-      <Data label="saturation">{data.saturation}</Data>
-      <Data label="pulse rate">{data.pulseRate}</Data>
+      <Data label="Status">{status} </Data>
+      <Data label="Saturation">{data.saturation}</Data>
+      <Data label="Pulse Rate">{data.pulseRate}</Data>
     </DataContainer>
   );
 }
 
 function ReadBloodPressure(props) {
-  return <Button title="Read Blood Pressure" type="outline" {...props} />;
-}
-
-//enable 55 aa 4 2 1 f8 disable 55 aa 4 2 0 f9
-async function enableBloodPressure() {
-  const command = hexToBase64("55 aa 04 02 01 f8");
-  // console.log("TCL: enableBloodPressure -> command", command)
-  const didWrite = await Bluetooth.writeToDevice(command);
-  // console.log("TCL: enableBloodPressure -> didWrite", didWrite)
-  return didWrite;
+  return (
+    <Button light rounded block style={styles.button} {...props}>
+      <Text>Read Blood Pressure</Text>
+    </Button>
+  );
 }
 
 function ReceiveDataButton(props) {
-  return <Button title="Read Data" type="outline" {...props} />;
+  return (
+    <Button light rounded block style={styles.button} {...props}>
+      <Text>Read Data</Text>
+    </Button>
+  );
 }
 
 function StopDataButton(props) {
-  return <Button title="Stop Data" type="outline" {...props} />;
-}
-
-function LogDataButton(props) {
-  return <Button title="Log Data" type="outline" {...props} />;
+  return (
+    <Button light rounded block style={styles.button} {...props}>
+      <Text>Stop Data</Text>
+    </Button>
+  );
 }
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 20,
+    fontSize: 30,
     textAlign: "center",
+    margin: 10
+  },
+  text: {
+    fontSize: 25,
+    padding: 5,
+    fontWeight: "500",
+    color: "#302a29",
+    fontFamily: "sans-serif-medium"
+  },
+  button: {
+    fontFamily: "monospace",
     margin: 10
   }
 });
