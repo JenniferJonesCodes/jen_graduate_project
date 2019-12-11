@@ -28,13 +28,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   title: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     fontWeight: "700",
+    fontSize: 30,
     padding: 10
   },
   label: {
-    fontWeight: "500"
+    fontWeight: "500",
+    fontSize: 25
   },
-  value: {},
+  value: {
+    fontSize: 25
+  },
   dataContainer: {
     padding: 10,
     display: "flex",

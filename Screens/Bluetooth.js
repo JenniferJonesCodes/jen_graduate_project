@@ -4,7 +4,6 @@ import BluetoothClassic from "../Components/Bluetooth/BluetoothClassic";
 
 const Bluetooth = () => (
   <ScrollView style={styles.container}>
-    <Text style={styles.title}>Bluetooth Devices</Text>
     <BluetoothClassic />
   </ScrollView>
 );
@@ -14,10 +13,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffc3b5"
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     textAlign: "center",
     margin: 10,
-    marginTop: 100,
+    marginTop: 30,
     color: "#302a29",
     fontFamily: "sans-serif-medium"
   }

@@ -8,7 +8,7 @@ const Login = ({}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>CEMR Login</Text>
       <LoginForm onSubmit={login} />
     </View>
   );

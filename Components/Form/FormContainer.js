@@ -111,6 +111,7 @@ function FormContainer({
       <Button
         light
         rounded
+        block
         disabled={inProgress}
         onPress={handleSubmit}
         style={styles.button}
@@ -121,19 +122,21 @@ function FormContainer({
           <Text>{submitText}</Text>
         )}
       </Button>
-      <Text>{error}</Text>
+      <Text style={styles.errorText}>{error}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
     fontFamily: "monospace",
     marginTop: 20
+  },
+  errorText: {
+    maxWidth: "70%",
+    textAlign: "center",
+    color: "red",
+    marginTop: 10
   }
 });
 
