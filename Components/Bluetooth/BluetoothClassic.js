@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useCallback } from "react";
 import Bluetooth from "react-native-bluetooth-serial";
 import { convertStringToByteArray } from "./lib/converters";
 import DataList from "./DataList";
+import { hexToBase64 } from "./lib/converters";
 
 //state for testing with app without machine
 const testInitialState = {
@@ -212,10 +213,13 @@ function stopReading(dispatch, readHandler) {
   };
 }
 
-function handleLogData(data) {
-  return function logData(_e) {
-    console.log("TCL: handleLogData -> data", data);
-  };
+//enable 55 aa 4 2 1 f8 disable 55 aa 4 2 0 f9
+async function enableBloodPressure() {
+  const command = hexToBase64("55 aa 04 02 01 f8");
+  // console.log("TCL: enableBloodPressure -> command", command)
+  const didWrite = await Bluetooth.writeToDevice(command);
+  // console.log("TCL: enableBloodPressure -> didWrite", didWrite)
+  return didWrite;
 }
 
 function BluetoothClassic() {
@@ -244,11 +248,11 @@ function BluetoothClassic() {
       state={state}
       readHandler={readHandler}
       stopReading={stopReading}
-      handleLogData={handleLogData}
+      enableBloodPressure={enableBloodPressure}
       read={read}
       connect={connect}
       dispatch={dispatch}
-    ></DataList>
+    />
   );
 }
 
