@@ -12,26 +12,7 @@ function PatientSearch() {
 
   return (
     <View>
-      {/* //no selectedPatient, show search form */}
-      {/* !activePatient && <SearchForm onSubmit={onSubmit} />} */}
       <SearchForm onSubmit={onSubmit} />
-      {/* {activePatient && (
-        //current patient name and button to clear current patient to search for new
-        <View>
-          <Text>Active Patient: {activePatient.display}</Text>
-          <>
-            <Button
-              light
-              rounded
-              onPress={clearActive}
-              style={styles.button}
-              // title="Clear Active Patient"
-            >
-              <Text>Clear Active Patient </Text>
-            </Button>
-          </>
-        </View>
-      )} */}
     </View>
   );
 }
