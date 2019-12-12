@@ -43,11 +43,15 @@ function DataList({
           Please enable bluetooth and pair with the device to continue
         </Text>
       )}
-      {error && <Text>There was an error connecting</Text>}
+      {enabled && devices && error && !connected && (
+        <Text style={styles.warning}>
+          There was an error connecting. Please try again.
+        </Text>
+      )}
       {enabled && devices && !selectedDevice && (
         <DeviceList onSelect={connect(dispatch)} devices={devices} />
       )}
-      {enabled && selectedDevice && !connected && (
+      {enabled && selectedDevice && !error && !connected && (
         <Connecting device={selectedDevice} />
       )}
       {connected && (
@@ -180,6 +184,13 @@ const styles = StyleSheet.create({
     padding: 5,
     fontWeight: "500",
     color: "#302a29",
+    fontFamily: "sans-serif-medium"
+  },
+  warning: {
+    fontSize: 25,
+    padding: 5,
+    fontWeight: "500",
+    color: "red",
     fontFamily: "sans-serif-medium"
   },
   button: {

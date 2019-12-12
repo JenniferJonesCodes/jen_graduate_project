@@ -5,6 +5,7 @@ import { EncounterProvider } from "./Entities/Encounter";
 import Router from "./router";
 import Login from "./Screens/Login";
 import { ConceptsProvider } from "./Entities/Concepts";
+import { BluetoothProvider } from "./Components/Bluetooth/BluetoothClassic";
 
 //if logged in show router, if not logged in show login page
 function AuthGate() {
@@ -14,7 +15,9 @@ function AuthGate() {
     return (
       <ConceptsProvider>
         <EncounterProvider>
-          <Router />
+          <BluetoothProvider>
+            <Router />
+          </BluetoothProvider>
         </EncounterProvider>
       </ConceptsProvider>
     );

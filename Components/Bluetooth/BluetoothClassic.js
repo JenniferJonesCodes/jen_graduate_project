@@ -4,6 +4,9 @@ import { convertStringToByteArray } from "./lib/converters";
 import DataList from "./DataList";
 import { hexToBase64 } from "./lib/converters";
 
+const BluetoothContext = React.createContext({});
+const useBluetooth = () => React.useContext(BluetoothContext);
+
 //state for testing with app without machine
 const testInitialState = {
   enabled: true,
@@ -79,13 +82,16 @@ function reducer(state, action) {
     case actions.connected:
       return {
         ...state,
+        error: false,
+        isReading: false,
         connected: true
       };
     case actions.connectingFailed:
       return {
         ...state,
         connected: false,
-        error: true
+        error: true,
+        selectedDevice: null
       };
     case actions.startedReading:
       return {
@@ -222,7 +228,7 @@ async function enableBloodPressure() {
   return didWrite;
 }
 
-function BluetoothClassic() {
+export function BluetoothProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   // runs when component is initialized
@@ -242,6 +248,34 @@ function BluetoothClassic() {
   //usecallback prevents readHandler from being a new function every time we rerender (memoize it)
   //we want to stop reading on same listner not a new one
   const readHandler = useCallback(handleDataIn(dispatch), [dispatch]);
+
+  return (
+    <BluetoothContext.Provider
+      value={{
+        state,
+        readHandler,
+        stopReading,
+        enableBloodPressure,
+        read,
+        connect,
+        dispatch
+      }}
+    >
+      {children}
+    </BluetoothContext.Provider>
+  );
+}
+
+function BluetoothClassic() {
+  const {
+    state,
+    readHandler,
+    stopReading,
+    enableBloodPressure,
+    read,
+    connect,
+    dispatch
+  } = useBluetooth();
 
   return (
     <DataList
